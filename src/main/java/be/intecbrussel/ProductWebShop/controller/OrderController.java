@@ -38,30 +38,12 @@ public class OrderController {
 
     // custom methods
     // create
-    @PostMapping("/addOrder")
-    public ResponseEntity addOrder(@RequestBody OrderRequest orderRequest) {
+    @PostMapping("addOrder")
+    public ResponseEntity addOrderA(@RequestBody OrderRequest orderRequest) {
 
-        // get User from Database
-        Optional<User> user = userService.getUserById(orderRequest.getUserId());
-        if (user.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        // get Product from Database
-        List<OrderItem> orderItemList = new ArrayList<>();
-        for (OrderItemRequest orderItemRequest : orderRequest.getOrderItemRequestList()) {
-            Optional<Product> productDatabase = productService.getProductById(orderItemRequest.getProductId());
-            if (productDatabase.isEmpty()) {
-                return ResponseEntity.notFound().build();
-            }
-            orderItemList.add(new OrderItem(productDatabase.get(), orderItemRequest.getQuantity()));
-        }
-        // order
-        Order order = new Order(user.get(), orderItemList);
-
-        boolean success = orderService.addOrder(order);
+        boolean success = orderService.addOrder(orderRequest);
         if (success) {
-            double totalPrice = orderTotalPrice(order.getId());
-            return ResponseEntity.ok("order has been created. Total price : " + totalPrice);
+            return ResponseEntity.ok("order has been created.");
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("There was an error while creating the order");
         }
@@ -89,13 +71,13 @@ public class OrderController {
     }
 
     @GetMapping("/getOrderByUserId")
-    public ResponseEntity getOrderByUserId(@RequestParam Long userid) {
+    public ResponseEntity<List<Order>> getOrderByUserId(@RequestParam Long userid) {
         try {
-            return ResponseEntity.ok(orderService.getOrderByUserId(userid));
+            List<Order> orders = orderService.getOrderByUserId(userid);
+            return ResponseEntity.ok(orders);
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
-
     }
     // delete
 
@@ -110,7 +92,7 @@ public class OrderController {
     }
 
     // getOrderTotalPrice
-    @GetMapping("getOrderTotalPriceByOrderId")
+    @GetMapping("/getOrderTotalPriceByOrderId")
     public ResponseEntity<Double> getOrderTotalPrice(@RequestParam Long orderId) {
         try {
             double totalprice = orderService.getOrderTotalPrice(orderId);
@@ -118,17 +100,5 @@ public class OrderController {
         } catch (OrderNotFoundExp e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-    }
-
-    private double orderTotalPrice(Long orderId) {
-
-        double totalPrice = 0;
-
-        Optional<Order> dbOrder = orderService.getOrderById(orderId);
-
-        for (OrderItem orderItem : dbOrder.get().getOrderItemList()) {
-            totalPrice += orderItem.getProduct().getPrice() * orderItem.getQuantity();
-        }
-        return totalPrice;
     }
 }

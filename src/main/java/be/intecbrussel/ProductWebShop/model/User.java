@@ -17,7 +17,7 @@ public class User {
     private String email;
     private String password;
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    @JsonManagedReference
+    @JsonBackReference
     private List<Order> orderList;
 
     // constructors
@@ -61,5 +61,15 @@ public class User {
 
     public void setOrderList(List<Order> orderList) {
         this.orderList = orderList;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", orderList=" + orderList +
+                '}';
     }
 }

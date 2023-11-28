@@ -1,7 +1,10 @@
 package be.intecbrussel.ProductWebShop.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import java.util.List;
 
@@ -14,10 +17,12 @@ public class OrderItem {
     private long id;
     @ManyToOne
     @JoinColumn(name = "product_id")
+    @JsonManagedReference
     private Product product;
     private double quantity;
     @ManyToOne
     @JoinColumn(name = "customer_order_id")
+    @JsonBackReference
     private Order order;
 
     // constructors
@@ -26,12 +31,16 @@ public class OrderItem {
         this.quantity = quantity;
     }
 
+    public OrderItem(Product product, double quantity, Order order) {
+        this.product = product;
+        this.quantity = quantity;
+        this.order = order;
+    }
+
     protected OrderItem() {
     }
 
     // getters and setters
-
-
     public Order getOrder() {
         return order;
     }
@@ -64,5 +73,13 @@ public class OrderItem {
         this.quantity = quantity;
     }
 
-
+    @Override
+    public String toString() {
+        return "OrderItem{" +
+                "id=" + id +
+                ", product=" + product +
+                ", quantity=" + quantity +
+                ", order=" + order +
+                '}';
+    }
 }

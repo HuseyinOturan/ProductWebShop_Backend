@@ -12,11 +12,9 @@ public class OrderRequest {
 
     public OrderRequest(Long userId, List<OrderItemRequest> orderItemRequestList) {
         this.userId = userId;
-        this.orderItemRequestList = new ArrayList<>();
-        for (OrderItemRequest orderItemRequest : orderItemRequestList) {
-            this.orderItemRequestList.add(orderItemRequest);
-        }
+        this.orderItemRequestList = new ArrayList<>(orderItemRequestList);
     }
+
 
     public Long getUserId() {
         return userId;

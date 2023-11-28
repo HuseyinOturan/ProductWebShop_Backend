@@ -1,6 +1,9 @@
 package be.intecbrussel.ProductWebShop.service;
 
+import be.intecbrussel.ProductWebShop.dto.OrderItemRequest;
+import be.intecbrussel.ProductWebShop.dto.OrderRequest;
 import be.intecbrussel.ProductWebShop.exception.OrderNotFoundExp;
+import be.intecbrussel.ProductWebShop.exception.ProductNotFoundExp;
 import be.intecbrussel.ProductWebShop.model.Order;
 import be.intecbrussel.ProductWebShop.model.OrderItem;
 import be.intecbrussel.ProductWebShop.model.Product;
@@ -34,59 +37,66 @@ public class OrderService {
     // custom methods
 
     // create
-    public boolean addOrder(Order order) {
+
+    public boolean addOrder(OrderRequest orderRequest) {
 
         try {
-
-
-            // get user from database
-
-            User userFromDatabase = userService.getUserById(order.getUser().getId()).get();
-
             // control for orderItemList.
-            if (order.getOrderItemList().isEmpty() || order.getOrderItemList() == null) {
+            if (orderRequest.getOrderItemRequestList().isEmpty() || orderRequest.getOrderItemRequestList() == null) {
                 return false;
             }
-            // control for product en quantitiy
-
-            for (OrderItem orderItem : order.getOrderItemList()) {
-                if (orderItem.getProduct() == null || orderItem.getQuantity() < 1) {
+            // control for product en quantity
+            for (OrderItemRequest orderItemRequest : orderRequest.getOrderItemRequestList()) {
+                if (orderItemRequest.getProductId() == null || orderItemRequest.getQuantity() < 1) {
                     return false;
                 }
             }
+            // get User from Database
+            Optional<User> userFromDatabase = userService.getUserById(orderRequest.getUserId());
+            if (userFromDatabase.isEmpty()) {
+                return false;
+            }
+            // get Product from Database and new orderItemList
             List<OrderItem> orderItemList = new ArrayList<>();
 
-            for (OrderItem orderItem : order.getOrderItemList()) {
+            for (OrderItemRequest orderItemRequest : orderRequest.getOrderItemRequestList()) {
 
+                // get product from database
+                Optional<Product> productDatabase = productService.getProductById(orderItemRequest.getProductId());
+
+                if (productDatabase.isEmpty()) {
+                    return false;
+                }
                 // stock control
-                Optional<Product> productFromData = productService.getProductById(orderItem.getProduct().getId());
-                if (productFromData.isEmpty()) {
+                if (orderItemRequest.getQuantity() > productDatabase.get().getStock()) {
                     return false;
                 }
-                if (productFromData.get().getStock() <= orderItem.getQuantity()) {
-                    return false;
-                }
-                // save orderItem
-                OrderItem orderItem1 = new OrderItem(productFromData.get(), orderItem.getQuantity());
-                orderItemService.addOrderItem(orderItem1);
-                orderItemList.add(orderItem);
-            }
-            //sava order
-            Order order1 = new Order(userFromDatabase, orderItemList);
+                // add orderItemList
+                orderItemList.add(new OrderItem(productDatabase.get(), orderItemRequest.getQuantity()));
+            } // save order
+            Order order1 = new Order(userFromDatabase.get(), orderItemList);
             orderRepository.save(order1);
 
+            // save orderItem with order
+            for (OrderItem orderItem : orderItemList) {
+                orderItemService.addOrderItem(new OrderItem(orderItem.getProduct(), orderItem.getQuantity(), order1));
+            }
             // stock reduction
-            for (OrderItem orderItem : order.getOrderItemList()) {
-                double oldStock = orderItem.getProduct().getStock();
-                double newStock = oldStock - orderItem.getQuantity();
-                orderItem.getProduct().setStock(newStock);
-                productService.patchProduct(orderItem.getProduct());
+            for (OrderItem orderItem : order1.getOrderItemList()) {
+                stockReduction(orderItem.getProduct(), orderItem.getQuantity());
             }
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            e.getMessage();
             return false;
         }
+    }
+
+    // product reduction
+    private void stockReduction(Product product, double quantity) {
+        double stock = product.getStock() - quantity;
+        product.setStock(stock);
+        productService.patchProduct(product);
     }
 
     // read
@@ -107,6 +117,8 @@ public class OrderService {
     public void deleteOrderByid(Long id) throws OrderNotFoundExp {
         if (orderRepository.existsById(id)) {
             orderRepository.deleteById(id);
+
+
         } else {
             throw new OrderNotFoundExp("Order not found with id: " + id);
         }

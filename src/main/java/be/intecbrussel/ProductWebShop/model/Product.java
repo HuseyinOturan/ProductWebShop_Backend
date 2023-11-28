@@ -1,5 +1,6 @@
 package be.intecbrussel.ProductWebShop.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
@@ -19,11 +20,12 @@ public class Product {
     private double stock;
     private double price;
     @OneToMany(mappedBy = "product")
+    @JsonBackReference
     private List<OrderItem> orderItemList;
 
     // constructors
     public Product(String name, String img, String descriptions, double stock, double price) {
-        
+
         this.name = name;
         this.img = img;
         this.descriptions = descriptions;
@@ -91,5 +93,18 @@ public class Product {
 
     public void setOrderItemList(List<OrderItem> orderItemList) {
         this.orderItemList = orderItemList;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", img='" + img + '\'' +
+                ", descriptions='" + descriptions + '\'' +
+                ", stock=" + stock +
+                ", price=" + price +
+                ", orderItemList=" + orderItemList +
+                '}';
     }
 }

@@ -15,11 +15,12 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
+    @JsonManagedReference
     private List<OrderItem> orderItemList;
 
     @ManyToOne
-    @JsonBackReference
     @JoinColumn(name = "user_id")
+    @JsonManagedReference
     private User user;
     private LocalDateTime localDateTime;
 
@@ -29,10 +30,7 @@ public class Order {
 
     public Order(User user, List<OrderItem> orderItems) {
         this.user = user;
-        this.orderItemList = new ArrayList<>();
-        for (OrderItem orderItem : orderItems) {
-            this.orderItemList.add(orderItem);
-        }
+        this.orderItemList = new ArrayList<>(orderItems);
         this.localDateTime = LocalDateTime.now();
     }
 
@@ -69,5 +67,13 @@ public class Order {
         this.localDateTime = localDateTime;
     }
 
-
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", orderItemList=" + orderItemList +
+                ", user=" + user +
+                ", localDateTime=" + localDateTime +
+                '}';
+    }
 }
