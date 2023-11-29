@@ -2,6 +2,7 @@ package be.intecbrussel.ProductWebShop.controller;
 
 import be.intecbrussel.ProductWebShop.dto.OrderItemRequest;
 import be.intecbrussel.ProductWebShop.dto.OrderRequest;
+import be.intecbrussel.ProductWebShop.exception.OrderItemNotFoundExp;
 import be.intecbrussel.ProductWebShop.exception.OrderNotFoundExp;
 import be.intecbrussel.ProductWebShop.model.Order;
 import be.intecbrussel.ProductWebShop.model.OrderItem;
@@ -79,14 +80,14 @@ public class OrderController {
             return ResponseEntity.notFound().build();
         }
     }
-    // delete
 
+    // delete
     @DeleteMapping("deleteOrderById")
     public ResponseEntity<String> deleteOrderById(@RequestParam Long id) {
         try {
             orderService.deleteOrderByid(id);
             return ResponseEntity.ok("Order deleted successfully");
-        } catch (OrderNotFoundExp e) {
+        } catch (OrderNotFoundExp | OrderItemNotFoundExp e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }

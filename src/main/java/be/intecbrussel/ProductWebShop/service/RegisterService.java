@@ -15,22 +15,24 @@ public class RegisterService {
     private UserRepository userRepository;
 
     // constructors
-    public RegisterService(UserRepository userRepository){
-        this.userRepository=userRepository;
+    public RegisterService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     // custom methods
 
     // create user
-    public Optional<User> createUser(User user){
+    public Optional<User> createUser(User user) {
+
         // input validation
-        if(user.getEmail().trim().isEmpty() || user.getPassword().trim().isEmpty()){
+
+        if (user.getEmail().trim().isEmpty() || user.getPassword().trim().isEmpty()) {
             return Optional.empty();
         }
         // check dub. email
-        Optional<User> userFromDb= userRepository.findByEmail(user.getEmail());
+        Optional<User> userFromDb = userRepository.findByEmail(user.getEmail());
 
-        if(userFromDb.isPresent()) {
+        if (userFromDb.isPresent()) {
             return Optional.empty();
         }
         // save user in db

@@ -1,5 +1,6 @@
 package be.intecbrussel.ProductWebShop.service;
 
+import be.intecbrussel.ProductWebShop.exception.UserNotFoundExp;
 import be.intecbrussel.ProductWebShop.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import be.intecbrussel.ProductWebShop.model.User;
@@ -35,4 +36,17 @@ public class UserService {
         return userRepository.findById(id);
     }
 
+    // update
+    public Optional<User> patchUser(User user) {
+        return Optional.of(userRepository.save(user));
+    }
+
+    // delete
+    public void userDeleteByUserId(Long userId) throws UserNotFoundExp {
+        if (userRepository.existsById(userId)) {
+            userRepository.deleteById(userId);
+        } else {
+            throw new UserNotFoundExp("user not found");
+        }
+    }
 }

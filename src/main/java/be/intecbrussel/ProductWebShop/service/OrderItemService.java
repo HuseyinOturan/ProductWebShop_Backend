@@ -5,6 +5,7 @@ import be.intecbrussel.ProductWebShop.exception.ProductNotFoundExp;
 import be.intecbrussel.ProductWebShop.model.OrderItem;
 import be.intecbrussel.ProductWebShop.model.Product;
 import be.intecbrussel.ProductWebShop.repository.OrderItemRepository;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,6 +36,10 @@ public class OrderItemService {
 
     public Optional<OrderItem> getOrderItemById(long id) {
         return orderItemRepository.findById(id);
+    }
+
+    public List<OrderItem> getOrderItemListByOrderId(long id) {
+        return orderItemRepository.findOrderItemsByOrder_Id(id);
     }
 
     // update

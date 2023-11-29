@@ -2,6 +2,7 @@ package be.intecbrussel.ProductWebShop.service;
 
 import be.intecbrussel.ProductWebShop.dto.OrderItemRequest;
 import be.intecbrussel.ProductWebShop.dto.OrderRequest;
+import be.intecbrussel.ProductWebShop.exception.OrderItemNotFoundExp;
 import be.intecbrussel.ProductWebShop.exception.OrderNotFoundExp;
 import be.intecbrussel.ProductWebShop.exception.ProductNotFoundExp;
 import be.intecbrussel.ProductWebShop.model.Order;
@@ -87,7 +88,7 @@ public class OrderService {
             }
             return true;
         } catch (Exception e) {
-            e.getMessage();
+            System.out.println(e.getMessage());
             return false;
         }
     }
@@ -114,10 +115,18 @@ public class OrderService {
     }
 
     // delete
-    public void deleteOrderByid(Long id) throws OrderNotFoundExp {
-        if (orderRepository.existsById(id)) {
-            orderRepository.deleteById(id);
+    public void deleteOrderByid(Long id) throws OrderNotFoundExp, OrderItemNotFoundExp {
+        Optional<Order> orderDatabase = orderRepository.findById(id);
 
+        if (orderDatabase.isPresent()) {
+            // orderItem delete
+            List<OrderItem> orderItemList = orderItemService.getOrderItemListByOrderId(orderDatabase.get().getId());
+
+            for (OrderItem orderItem : orderItemList) {
+                orderItemService.deleteOrderItemById(orderItem.getId());
+            }
+            // order delete
+            orderRepository.deleteById(id);
 
         } else {
             throw new OrderNotFoundExp("Order not found with id: " + id);

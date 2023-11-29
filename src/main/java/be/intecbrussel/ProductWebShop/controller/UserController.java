@@ -1,6 +1,7 @@
 package be.intecbrussel.ProductWebShop.controller;
 
 import be.intecbrussel.ProductWebShop.dto.LoginAttempt;
+import be.intecbrussel.ProductWebShop.exception.UserNotFoundExp;
 import be.intecbrussel.ProductWebShop.model.User;
 import be.intecbrussel.ProductWebShop.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -27,7 +28,7 @@ public class UserController {
 
     // read
     @GetMapping("/getUserByEmail")
-    public ResponseEntity getUserByEmail(@RequestParam String email) {
+    public ResponseEntity<User> getUserByEmail(@RequestParam String email) {
 
         Optional<User> userFromDb = userService.getUser(email);
         if (userFromDb.isEmpty()) {
@@ -56,7 +57,27 @@ public class UserController {
         }
     }
 
+    // update
+    @PatchMapping("/updateUser")
+    public ResponseEntity updateUser(@RequestBody User user) {
+        try {
+            return ResponseEntity.ok(userService.patchUser(user));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
 
+    // delete
+    @DeleteMapping("/deleteUserByUserId")
+    public ResponseEntity<String> deleteUser(@RequestParam Long userId) {
+        try {
+            userService.userDeleteByUserId(userId);
+            return ResponseEntity.ok("user deleted");
+        } catch (UserNotFoundExp e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
 }
 
 
