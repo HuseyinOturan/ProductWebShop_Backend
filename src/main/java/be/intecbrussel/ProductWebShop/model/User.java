@@ -17,7 +17,7 @@ public class User {
     private String email;
     private String password;
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    @JsonBackReference
+    @JsonManagedReference("order-user")
     private List<Order> orderList;
 
     // constructors

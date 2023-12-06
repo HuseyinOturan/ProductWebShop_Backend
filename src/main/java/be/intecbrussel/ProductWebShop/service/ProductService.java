@@ -14,26 +14,33 @@ public class ProductService {
     private ProductRepository productRepository;
 
     // constructors
-    public ProductService(ProductRepository productRepository){
-        this.productRepository=productRepository;
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
     //customs methods
 
     // create
-    public Product addProduct(Product product){
+    public Product addProduct(Product product) {
         return productRepository.save(product);
     }
+
     // read
     public List<Product> getAllProduct() {
         return productRepository.findAll();
     }
-    public Optional<Product> getProductById(long id){
+
+    public Optional<Product> getProductById(long id) {
         return productRepository.findById(id);
     }
 
+    public Optional<Product> getProductByName(String productName) {
+        return productRepository.findByName(productName);
+    }
+
+
     // update
-    public Optional<Product> patchProduct(Product product){
+    public Optional<Product> patchProduct(Product product) {
 
         return Optional.of(productRepository.save(product));
     }
@@ -41,10 +48,10 @@ public class ProductService {
 
     public void deleteProductById(Long id) throws ProductNotFoundExp {
 
-        if (productRepository.existsById(id)){
+        if (productRepository.existsById(id)) {
             productRepository.deleteById(id);
         } else {
-            throw new ProductNotFoundExp("Product not found is : " +id);
+            throw new ProductNotFoundExp("Product not found is : " + id);
         }
     }
 }

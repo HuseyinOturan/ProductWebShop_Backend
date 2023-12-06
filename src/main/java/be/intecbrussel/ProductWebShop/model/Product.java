@@ -20,7 +20,7 @@ public class Product {
     private double stock;
     private double price;
     @OneToMany(mappedBy = "product")
-    @JsonBackReference
+    @JsonManagedReference("product-orderitem")
     private List<OrderItem> orderItemList;
 
     // constructors

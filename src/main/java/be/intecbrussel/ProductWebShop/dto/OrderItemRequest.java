@@ -22,7 +22,7 @@ public class OrderItemRequest {
         return quantity;
     }
 
-    public void setQuantitiy(Double quantity) {
+    public void setQuantity(Double quantity) {
         this.quantity = quantity;
     }
 

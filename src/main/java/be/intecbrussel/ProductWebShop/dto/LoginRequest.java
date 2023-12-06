@@ -1,6 +1,8 @@
 package be.intecbrussel.ProductWebShop.dto;
 
 public class LoginRequest {
+
+    // properties
     private String email;
     private String password;
 
@@ -9,6 +11,7 @@ public class LoginRequest {
         this.password = password;
     }
 
+    // getter setter
     public String getEmail() {
         return email;
     }

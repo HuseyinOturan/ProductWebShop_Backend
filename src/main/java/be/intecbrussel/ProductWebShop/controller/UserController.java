@@ -1,6 +1,5 @@
 package be.intecbrussel.ProductWebShop.controller;
 
-import be.intecbrussel.ProductWebShop.dto.LoginAttempt;
 import be.intecbrussel.ProductWebShop.exception.UserNotFoundExp;
 import be.intecbrussel.ProductWebShop.model.User;
 import be.intecbrussel.ProductWebShop.service.UserService;

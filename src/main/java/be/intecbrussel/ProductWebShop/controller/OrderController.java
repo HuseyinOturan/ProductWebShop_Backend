@@ -1,5 +1,7 @@
 package be.intecbrussel.ProductWebShop.controller;
 
+import be.intecbrussel.ProductWebShop.dto.OrderFront;
+import be.intecbrussel.ProductWebShop.dto.OrderItemFront;
 import be.intecbrussel.ProductWebShop.dto.OrderItemRequest;
 import be.intecbrussel.ProductWebShop.dto.OrderRequest;
 import be.intecbrussel.ProductWebShop.exception.OrderItemNotFoundExp;
@@ -11,6 +13,7 @@ import be.intecbrussel.ProductWebShop.model.User;
 import be.intecbrussel.ProductWebShop.service.OrderService;
 import be.intecbrussel.ProductWebShop.service.ProductService;
 import be.intecbrussel.ProductWebShop.service.UserService;
+import org.springframework.boot.web.reactive.filter.OrderedHiddenHttpMethodFilter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -40,7 +43,25 @@ public class OrderController {
     // custom methods
     // create
     @PostMapping("addOrder")
-    public ResponseEntity addOrderA(@RequestBody OrderRequest orderRequest) {
+    public ResponseEntity addOrder(@RequestBody OrderFront orderFront) {
+        Optional<User> dbUser = userService.getUser(orderFront.getUserEmail());
+        if (dbUser.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        List<OrderItemRequest> orderItemRequestList = new ArrayList<>();
+
+        for (OrderItemFront orderItemFront : orderFront.getOrderItemFrontList()) {
+
+            Optional<Product> dbProduct = productService.getProductByName(orderItemFront.getProductName());
+
+            if (dbProduct.isEmpty()) {
+                ResponseEntity.notFound().build();
+            }
+            orderItemRequestList.add(new OrderItemRequest(dbProduct.get().getId(), orderItemFront.getAmonut()));
+        }
+
+        OrderRequest orderRequest = new OrderRequest(dbUser.get().getId(), orderItemRequestList);
 
         boolean success = orderService.addOrder(orderRequest);
         if (success) {

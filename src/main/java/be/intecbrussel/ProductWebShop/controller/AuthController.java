@@ -1,6 +1,5 @@
 package be.intecbrussel.ProductWebShop.controller;
 
-import be.intecbrussel.ProductWebShop.dto.LoginAttempt;
 import be.intecbrussel.ProductWebShop.dto.LoginRequest;
 import be.intecbrussel.ProductWebShop.dto.LoginResponse;
 import be.intecbrussel.ProductWebShop.model.User;
@@ -45,10 +44,10 @@ public class AuthController {
 
     // login
     @PostMapping("/loginUser")
-    public ResponseEntity loginUser(@RequestBody LoginAttempt loginAttempt) {
+    public ResponseEntity<User> loginUser(@RequestBody LoginRequest loginRequest) {
 
         //getting registered user by email
-        Optional<User> userFromDb = userService.getUser(loginAttempt.getEmail());
+        Optional<User> userFromDb = userService.getUser(loginRequest.getEmail());
 
         //if user isn't registered
         if (userFromDb.isEmpty()) {
@@ -56,7 +55,7 @@ public class AuthController {
         }
 
         //if passwords don't match
-        if (!userFromDb.get().getPassword().equals(loginAttempt.getPassword())) {
+        if (!userFromDb.get().getPassword().equals(loginRequest.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         return ResponseEntity.ok(userFromDb.get());

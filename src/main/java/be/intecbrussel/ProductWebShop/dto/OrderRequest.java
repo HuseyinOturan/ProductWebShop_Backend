@@ -12,9 +12,8 @@ public class OrderRequest {
 
     public OrderRequest(Long userId, List<OrderItemRequest> orderItemRequestList) {
         this.userId = userId;
-        this.orderItemRequestList = new ArrayList<>(orderItemRequestList);
+        this.orderItemRequestList = orderItemRequestList;
     }
-
 
     public Long getUserId() {
         return userId;
@@ -30,5 +29,13 @@ public class OrderRequest {
 
     public void setOrderItemRequestList(List<OrderItemRequest> orderItemRequestList) {
         this.orderItemRequestList = orderItemRequestList;
+    }
+
+    @Override
+    public String toString() {
+        return "OrderRequest{" +
+                "userId=" + userId +
+                ", orderItemRequestList=" + orderItemRequestList +
+                '}';
     }
 }

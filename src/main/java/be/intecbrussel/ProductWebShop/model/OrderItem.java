@@ -17,12 +17,12 @@ public class OrderItem {
     private long id;
     @ManyToOne
     @JoinColumn(name = "product_id")
-    @JsonManagedReference
+    @JsonBackReference("product-orderitem")
     private Product product;
     private double quantity;
     @ManyToOne
     @JoinColumn(name = "customer_order_id")
-    @JsonBackReference
+    @JsonBackReference("order-orderitem")
     private Order order;
 
     // constructors

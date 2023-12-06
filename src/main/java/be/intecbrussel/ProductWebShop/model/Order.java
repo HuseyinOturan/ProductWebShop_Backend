@@ -15,12 +15,12 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
-    @JsonManagedReference
+    @JsonManagedReference("order-orderitem")
     private List<OrderItem> orderItemList;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonManagedReference
+    @JsonBackReference("order-user")
     private User user;
     private LocalDateTime localDateTime;
 
