@@ -1,9 +1,5 @@
-package be.intecbrussel.ProductWebShop.dto;
+package be.intecbrussel.ProductWebShop.dto.OrderDto;
 
-import be.intecbrussel.ProductWebShop.model.OrderItem;
-import be.intecbrussel.ProductWebShop.model.User;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class OrderRequest {

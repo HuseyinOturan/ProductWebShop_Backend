@@ -32,8 +32,14 @@ public class ProductController {
     // custom methods
     // create
     @PostMapping("/addProduct")
-    public void addProduct(@RequestBody Product product) {
-        productService.addProduct(product);
+    public ResponseEntity addProduct(@RequestBody Product product) {
+        
+        if (productService.addProduct(product)) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+
     }
 
     // read
@@ -80,13 +86,15 @@ public class ProductController {
 
     // delete
     @DeleteMapping("deleteProductById")
-    public ResponseEntity<String> deleteProductById(@RequestParam Long id) {
+    public ResponseEntity<String> deleteProductById(@RequestParam long id) {
 
         try {
             productService.deleteProductById(id);
             return ResponseEntity.ok("Product deleted");
         } catch (ProductNotFoundExp e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
         }
     }
 }

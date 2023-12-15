@@ -1,7 +1,5 @@
 package be.intecbrussel.ProductWebShop.service;
 
-import be.intecbrussel.ProductWebShop.dto.LoginRequest;
-import be.intecbrussel.ProductWebShop.dto.LoginResponse;
 import be.intecbrussel.ProductWebShop.model.User;
 import be.intecbrussel.ProductWebShop.repository.UserRepository;
 import org.springframework.stereotype.Service;

@@ -21,8 +21,16 @@ public class ProductService {
     //customs methods
 
     // create
-    public Product addProduct(Product product) {
-        return productRepository.save(product);
+    public boolean addProduct(Product product) {
+        if (product.getName().isEmpty() || product.getImg().isEmpty() || product.getDescriptions().isEmpty()) {
+            return false;
+        }
+        if (product.getStock() < 0 || product.getPrice() < 0) {
+            return false;
+        }
+
+        productRepository.save(product);
+        return true;
     }
 
     // read
@@ -44,8 +52,8 @@ public class ProductService {
 
         return Optional.of(productRepository.save(product));
     }
-    // delete
 
+    // delete
     public void deleteProductById(Long id) throws ProductNotFoundExp {
 
         if (productRepository.existsById(id)) {

@@ -1,4 +1,4 @@
-package be.intecbrussel.ProductWebShop.dto;
+package be.intecbrussel.ProductWebShop.dto.OrderDto;
 
 public class OrderItemRequest {
 

@@ -1,18 +1,16 @@
 package be.intecbrussel.ProductWebShop.service;
 
-import be.intecbrussel.ProductWebShop.dto.OrderItemRequest;
-import be.intecbrussel.ProductWebShop.dto.OrderRequest;
+import be.intecbrussel.ProductWebShop.dto.OrderDto.OrderApp;
+import be.intecbrussel.ProductWebShop.dto.OrderDto.OrderItemApp;
+import be.intecbrussel.ProductWebShop.dto.OrderDto.OrderItemRequest;
+import be.intecbrussel.ProductWebShop.dto.OrderDto.OrderRequest;
 import be.intecbrussel.ProductWebShop.exception.OrderItemNotFoundExp;
 import be.intecbrussel.ProductWebShop.exception.OrderNotFoundExp;
-import be.intecbrussel.ProductWebShop.exception.ProductNotFoundExp;
 import be.intecbrussel.ProductWebShop.model.Order;
 import be.intecbrussel.ProductWebShop.model.OrderItem;
 import be.intecbrussel.ProductWebShop.model.Product;
 import be.intecbrussel.ProductWebShop.model.User;
-import be.intecbrussel.ProductWebShop.repository.OrderItemRepository;
 import be.intecbrussel.ProductWebShop.repository.OrderRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -39,7 +37,25 @@ public class OrderService {
 
     // create
 
-    public boolean addOrder(OrderRequest orderRequest) {
+    public boolean addOrder(OrderApp orderApp) {
+
+        // getter orderRequest and orderItemRequest from orderApp
+
+        User user1 = userService.getUserById(orderApp.getId()).get();
+
+        List<OrderItemRequest> orderItemRequestList1 = new ArrayList<>();
+        for (OrderItemApp orderItemApp : orderApp.getOrderItemAppList()) {
+
+            Optional<Product> productDb = productService.getProductById(orderItemApp.getProductAppId());
+            if (productDb.isEmpty()) {
+                return false;
+            }
+            orderItemRequestList1.add(new OrderItemRequest(productDb.get().getId(), orderItemApp.getAmount()));
+        }
+
+        OrderRequest orderRequest = new OrderRequest(user1.getId(), orderItemRequestList1);
+
+        System.err.println(" order ");
 
         try {
 

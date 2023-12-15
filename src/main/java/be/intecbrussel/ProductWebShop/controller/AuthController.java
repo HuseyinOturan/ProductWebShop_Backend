@@ -1,14 +1,12 @@
 package be.intecbrussel.ProductWebShop.controller;
 
-import be.intecbrussel.ProductWebShop.dto.LoginRequest;
-import be.intecbrussel.ProductWebShop.dto.LoginResponse;
+import be.intecbrussel.ProductWebShop.dto.AuthDto.LoginRequest;
+import be.intecbrussel.ProductWebShop.dto.AuthDto.LoginResponse;
 import be.intecbrussel.ProductWebShop.model.User;
 import be.intecbrussel.ProductWebShop.service.RegisterService;
 import be.intecbrussel.ProductWebShop.service.UserService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,7 +42,7 @@ public class AuthController {
 
     // login
     @PostMapping("/loginUser")
-    public ResponseEntity<User> loginUser(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<LoginResponse> loginUser(@RequestBody LoginRequest loginRequest) {
 
         //getting registered user by email
         Optional<User> userFromDb = userService.getUser(loginRequest.getEmail());
@@ -58,6 +56,8 @@ public class AuthController {
         if (!userFromDb.get().getPassword().equals(loginRequest.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        return ResponseEntity.ok(userFromDb.get());
+        LoginResponse loginResponse = new LoginResponse(userFromDb.get().getId(), userFromDb.get().getEmail(), userFromDb.get().getPassword());
+
+        return ResponseEntity.ok(loginResponse);
     }
 }

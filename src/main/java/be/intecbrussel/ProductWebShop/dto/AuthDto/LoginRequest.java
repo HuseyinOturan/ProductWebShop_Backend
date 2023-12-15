@@ -1,4 +1,4 @@
-package be.intecbrussel.ProductWebShop.dto;
+package be.intecbrussel.ProductWebShop.dto.AuthDto;
 
 public class LoginRequest {
 
