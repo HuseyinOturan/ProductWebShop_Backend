@@ -46,4 +46,14 @@ public class AllOrderItemRes {
     public void setUseremail(String useremail) {
         this.useremail = useremail;
     }
+
+    @Override
+    public String toString() {
+        return "AllOrderItemRes{" +
+                "useremail='" + useremail + '\'' +
+                ", productName='" + productName + '\'' +
+                ", productPrice=" + productPrice +
+                ", quantity=" + quantity +
+                '}';
+    }
 }

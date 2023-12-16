@@ -55,7 +55,7 @@ public class OrderController {
     }
 
     @GetMapping("/getOrderById")
-    public ResponseEntity<Optional<Order>> getOrderById(@RequestParam Long id) {
+    public ResponseEntity<Optional<Order>> getOrderById(@RequestParam long id) {
         Optional<Order> order = orderService.getOrderById(id);
 
         if (order.isPresent()) {
@@ -66,7 +66,7 @@ public class OrderController {
     }
 
     @GetMapping("/getOrderByUserId")
-    public ResponseEntity<List<Order>> getOrderByUserId(@RequestParam Long userid) {
+    public ResponseEntity<List<Order>> getOrderByUserId(@RequestParam long userid) {
         try {
             List<Order> orders = orderService.getOrderByUserId(userid);
             return ResponseEntity.ok(orders);
@@ -77,7 +77,7 @@ public class OrderController {
 
     // delete
     @DeleteMapping("deleteOrderById")
-    public ResponseEntity<String> deleteOrderById(@RequestParam Long id) {
+    public ResponseEntity<String> deleteOrderById(@RequestParam long id) {
         try {
             orderService.deleteOrderByid(id);
             return ResponseEntity.ok("Order deleted successfully");
@@ -88,7 +88,7 @@ public class OrderController {
 
     // getOrderTotalPrice
     @GetMapping("/getOrderTotalPriceByOrderId")
-    public ResponseEntity<Double> getOrderTotalPrice(@RequestParam Long orderId) {
+    public ResponseEntity<Double> getOrderTotalPrice(@RequestParam long orderId) {
         try {
             double totalprice = orderService.getOrderTotalPrice(orderId);
             return ResponseEntity.ok(totalprice);

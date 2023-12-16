@@ -69,7 +69,7 @@ public class UserController {
 
     // delete
     @DeleteMapping("/deleteUserByUserId")
-    public ResponseEntity<String> deleteUser(@RequestParam Long userId) {
+    public ResponseEntity<String> deleteUser(@RequestParam long userId) {
         try {
             userService.userDeleteByUserId(userId);
             return ResponseEntity.ok("user deleted");
