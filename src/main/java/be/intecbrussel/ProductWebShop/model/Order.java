@@ -16,21 +16,21 @@ public class Order {
     private long id;
     @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
     @JsonManagedReference("order-orderitem")
-    private List<OrderItem> orderItemList;
+    private List<OrderItem> orderItemList = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonBackReference("order-user")
-    private User user;
+    @JsonBackReference("order-AuthUser")
+    private AuthUser authUser;
     private LocalDateTime localDateTime;
 
     // constructors
     protected Order() {
     }
 
-    public Order(User user, List<OrderItem> orderItems) {
-        this.user = user;
-        this.orderItemList = new ArrayList<>(orderItems);
+    public Order(AuthUser authUser, List<OrderItem> orderItems) {
+        this.authUser = authUser;
+        this.orderItemList = orderItems;
         this.localDateTime = LocalDateTime.now();
     }
 
@@ -51,12 +51,12 @@ public class Order {
         this.orderItemList = orderItemList;
     }
 
-    public User getUser() {
-        return user;
+    public AuthUser getUser() {
+        return authUser;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(AuthUser authUser) {
+        this.authUser = authUser;
     }
 
     public LocalDateTime getLocalDateTime() {
@@ -72,7 +72,7 @@ public class Order {
         return "Order{" +
                 "id=" + id +
                 ", orderItemList=" + orderItemList +
-                ", user=" + user +
+                ", user=" + authUser +
                 ", localDateTime=" + localDateTime +
                 '}';
     }

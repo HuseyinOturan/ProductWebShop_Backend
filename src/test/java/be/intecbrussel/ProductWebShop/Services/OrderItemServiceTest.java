@@ -1,10 +1,9 @@
 package be.intecbrussel.ProductWebShop.Services;
 
 import be.intecbrussel.ProductWebShop.exception.OrderItemNotFoundExp;
-import be.intecbrussel.ProductWebShop.model.Order;
+import be.intecbrussel.ProductWebShop.model.AuthUser;
 import be.intecbrussel.ProductWebShop.model.OrderItem;
 import be.intecbrussel.ProductWebShop.model.Product;
-import be.intecbrussel.ProductWebShop.model.User;
 import be.intecbrussel.ProductWebShop.repository.OrderItemRepository;
 import be.intecbrussel.ProductWebShop.service.OrderItemService;
 import be.intecbrussel.ProductWebShop.service.UserService;
@@ -169,8 +168,8 @@ public class OrderItemServiceTest {
         return orderItemList;
     }
 
-    private User createSampleUser() {
-        User user = new User("ttt", "ttt");
-        return user;
+    private AuthUser createSampleUser() {
+        AuthUser authUser = new AuthUser("ttt", "ttt");
+        return authUser;
     }
 }

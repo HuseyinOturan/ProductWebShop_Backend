@@ -1,8 +1,7 @@
 package be.intecbrussel.ProductWebShop.Controller;
 
 import be.intecbrussel.ProductWebShop.controller.UserController;
-import be.intecbrussel.ProductWebShop.exception.UserNotFoundExp;
-import be.intecbrussel.ProductWebShop.model.User;
+import be.intecbrussel.ProductWebShop.model.AuthUser;
 import be.intecbrussel.ProductWebShop.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 
-public class UserControllerTest {
+public class AuthUserControllerTest {
 
     @Mock
     private UserService userService;
@@ -37,15 +36,15 @@ public class UserControllerTest {
     void testGetUserByEmail_Success() {
         // Arrange
         String userEmail = "test@example.com";
-        User expectedUser = createSampleUser();
-        when(userService.getUser(userEmail)).thenReturn(Optional.of(expectedUser));
+        AuthUser expectedAuthUser = createSampleUser();
+        when(userService.getUser(userEmail)).thenReturn(Optional.of(expectedAuthUser));
 
         // Act
-        ResponseEntity<User> result = userController.getUserByEmail(userEmail);
+        ResponseEntity<AuthUser> result = userController.getUserByEmail(userEmail);
 
         // Assert
         assertEquals(HttpStatus.OK, result.getStatusCode());
-        assertEquals(expectedUser, result.getBody());
+        assertEquals(expectedAuthUser, result.getBody());
     }
 
     @Test
@@ -55,7 +54,7 @@ public class UserControllerTest {
         when(userService.getUser(userEmail)).thenReturn(Optional.empty());
 
         // Act
-        ResponseEntity<User> result = userController.getUserByEmail(userEmail);
+        ResponseEntity<AuthUser> result = userController.getUserByEmail(userEmail);
 
         // Assert
         assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
@@ -65,15 +64,15 @@ public class UserControllerTest {
     @Test
     void testGetAllUser_Success() {
         // Arrange
-        List<User> userList = createSampleUserList();
-        when(userService.getAllUser()).thenReturn(userList);
+        List<AuthUser> authUserList = createSampleUserList();
+        when(userService.getAllUser()).thenReturn(authUserList);
 
         // Act
         ResponseEntity result = userController.getAllUser();
 
         // Assert
         assertEquals(HttpStatus.OK, result.getStatusCode());
-        assertEquals(userList, result.getBody());
+        assertEquals(authUserList, result.getBody());
     }
 
     @Test
@@ -93,11 +92,11 @@ public class UserControllerTest {
     void testGetUserById_Success() {
         // Arrange
         long userId = 1;
-        Optional<User> expectedUser = Optional.of(createSampleUser());
+        Optional<AuthUser> expectedUser = Optional.of(createSampleUser());
         when(userService.getUserById(userId)).thenReturn(expectedUser);
 
         // Act
-        ResponseEntity<Optional<User>> result = userController.getUserById(userId);
+        ResponseEntity<Optional<AuthUser>> result = userController.getUserById(userId);
 
         // Assert
         assertEquals(HttpStatus.OK, result.getStatusCode());
@@ -111,7 +110,7 @@ public class UserControllerTest {
         when(userService.getUserById(userId)).thenReturn(Optional.empty());
 
         // Act
-        ResponseEntity<Optional<User>> result = userController.getUserById(userId);
+        ResponseEntity<Optional<AuthUser>> result = userController.getUserById(userId);
 
         // Assert
         assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
@@ -121,11 +120,11 @@ public class UserControllerTest {
     @Test
     void testUpdateUser_Success() {
         // Arrange
-        User userToUpdate = createSampleUser();
-        when(userService.patchUser(userToUpdate)).thenReturn(Optional.of(userToUpdate));
+        AuthUser authUserToUpdate = createSampleUser();
+        when(userService.patchUser(authUserToUpdate)).thenReturn(Optional.of(authUserToUpdate));
 
         // Act
-        ResponseEntity result = userController.updateUser(userToUpdate);
+        ResponseEntity result = userController.updateUser(authUserToUpdate);
 
         // Assert
         assertEquals(HttpStatus.OK, result.getStatusCode());
@@ -134,11 +133,11 @@ public class UserControllerTest {
     @Test
     void testUpdateUser_BadRequest() {
         // Arrange
-        User userToUpdate = createSampleUser();
-        when(userService.patchUser(userToUpdate)).thenThrow(new RuntimeException("Test Exception"));
+        AuthUser authUserToUpdate = createSampleUser();
+        when(userService.patchUser(authUserToUpdate)).thenThrow(new RuntimeException("Test Exception"));
 
         // Act
-        ResponseEntity result = userController.updateUser(userToUpdate);
+        ResponseEntity result = userController.updateUser(authUserToUpdate);
 
         // Assert
         assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
@@ -159,15 +158,15 @@ public class UserControllerTest {
 
     // Help Method
 
-    private User createSampleUser() {
-        User user = new User("ee", "ee");
-        return user;
+    private AuthUser createSampleUser() {
+        AuthUser authUser = new AuthUser("ee", "ee");
+        return authUser;
     }
 
-    private List<User> createSampleUserList() {
+    private List<AuthUser> createSampleUserList() {
 
-        List<User> userList = new ArrayList<>();
-        userList.add(createSampleUser());
-        return userList;
+        List<AuthUser> authUserList = new ArrayList<>();
+        authUserList.add(createSampleUser());
+        return authUserList;
     }
 }

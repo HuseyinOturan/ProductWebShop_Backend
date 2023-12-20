@@ -1,6 +1,5 @@
 package be.intecbrussel.ProductWebShop.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
@@ -8,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class User {
+public class AuthUser {
 
     // properties
     @Id
@@ -16,18 +15,20 @@ public class User {
     private long id;
     private String email;
     private String password;
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    @JsonManagedReference("order-user")
+    @OneToMany(fetch = FetchType.EAGER)
+    @JsonManagedReference("order-AuthUser")
     private List<Order> orderList;
+    private boolean isAdmin;
 
     // constructors
-    public User(String email, String password) {
+    public AuthUser(String email, String password) {
         this.email = email;
         this.password = password;
         this.orderList = new ArrayList<>();
+        this.isAdmin = false;
     }
 
-    protected User() {
+    protected AuthUser() {
     }
 
     // getters and setters
@@ -61,6 +62,14 @@ public class User {
 
     public void setOrderList(List<Order> orderList) {
         this.orderList = orderList;
+    }
+
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
     }
 
     @Override

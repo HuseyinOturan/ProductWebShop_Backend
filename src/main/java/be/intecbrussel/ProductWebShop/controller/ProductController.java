@@ -5,11 +5,12 @@ import be.intecbrussel.ProductWebShop.model.Product;
 import be.intecbrussel.ProductWebShop.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@RestController
+@Controller
 @RequestMapping("/product")
 public class ProductController {
     // properties
@@ -33,7 +34,7 @@ public class ProductController {
     // create
     @PostMapping("/addProduct")
     public ResponseEntity addProduct(@RequestBody Product product) {
-        
+
         if (productService.addProduct(product)) {
             return ResponseEntity.ok().build();
         } else {
@@ -43,14 +44,7 @@ public class ProductController {
     }
 
     // read
-    @GetMapping("/getAllProduct")
-    public ResponseEntity getAllProduct() {
-        try {
-            return ResponseEntity.ok(productService.getAllProduct());
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
+
 
     @GetMapping("/getProductById")
     public ResponseEntity<Optional<Product>> getProductById(@RequestParam long id) {

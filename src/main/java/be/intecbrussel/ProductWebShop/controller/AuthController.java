@@ -2,12 +2,14 @@ package be.intecbrussel.ProductWebShop.controller;
 
 import be.intecbrussel.ProductWebShop.dto.AuthDto.LoginRequest;
 import be.intecbrussel.ProductWebShop.dto.AuthDto.LoginResponse;
-import be.intecbrussel.ProductWebShop.model.User;
+import be.intecbrussel.ProductWebShop.dto.AuthDto.RegisterRequest;
+import be.intecbrussel.ProductWebShop.model.AuthUser;
+import be.intecbrussel.ProductWebShop.service.ProductService;
 import be.intecbrussel.ProductWebShop.service.RegisterService;
 import be.intecbrussel.ProductWebShop.service.UserService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,18 +23,22 @@ public class AuthController {
     // properties
     private RegisterService registerService;
     private UserService userService;
+    private ProductService productService;
 
     // constructors
-    public AuthController(RegisterService registerService, UserService userService) {
+
+
+    public AuthController(RegisterService registerService, UserService userService, ProductService productService) {
         this.registerService = registerService;
         this.userService = userService;
+        this.productService = productService;
     }
 
     // custom methods
     // register
     @PostMapping("/register")
-    public ResponseEntity<User> saveUser(@RequestBody User user) {
-        Optional<User> result = registerService.createUser(user);
+    public ResponseEntity<AuthUser> saveUser(@RequestBody RegisterRequest registerRequest) {
+        Optional<AuthUser> result = registerService.createUser(registerRequest);
 
         if (result.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -42,22 +48,20 @@ public class AuthController {
 
     // login
     @PostMapping("/loginUser")
-    public ResponseEntity<LoginResponse> loginUser(@RequestBody LoginRequest loginRequest) {
-
-        //getting registered user by email
-        Optional<User> userFromDb = userService.getUser(loginRequest.getEmail());
-
-        //if user isn't registered
-        if (userFromDb.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    public ResponseEntity loginUser(@RequestBody LoginRequest loginRequest) {
+        Optional<LoginResponse> loginResponse = userService.login(loginRequest);
+        if (loginResponse.isPresent()) {
+            return ResponseEntity.ok(loginResponse);
         }
+        return ResponseEntity.notFound().build();
+    }
 
-        //if passwords don't match
-        if (!userFromDb.get().getPassword().equals(loginRequest.getPassword())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    @GetMapping("/getAllProduct")
+    public ResponseEntity getAllProduct() {
+        try {
+            return ResponseEntity.ok(productService.getAllProduct());
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
         }
-        LoginResponse loginResponse = new LoginResponse(userFromDb.get().getId(), userFromDb.get().getEmail(), userFromDb.get().getPassword());
-
-        return ResponseEntity.ok(loginResponse);
     }
 }

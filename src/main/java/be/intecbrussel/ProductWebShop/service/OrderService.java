@@ -6,10 +6,10 @@ import be.intecbrussel.ProductWebShop.dto.OrderDto.OrderItemRequest;
 import be.intecbrussel.ProductWebShop.dto.OrderDto.OrderRequest;
 import be.intecbrussel.ProductWebShop.exception.OrderItemNotFoundExp;
 import be.intecbrussel.ProductWebShop.exception.OrderNotFoundExp;
+import be.intecbrussel.ProductWebShop.model.AuthUser;
 import be.intecbrussel.ProductWebShop.model.Order;
 import be.intecbrussel.ProductWebShop.model.OrderItem;
 import be.intecbrussel.ProductWebShop.model.Product;
-import be.intecbrussel.ProductWebShop.model.User;
 import be.intecbrussel.ProductWebShop.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +41,7 @@ public class OrderService {
 
         // getter orderRequest and orderItemRequest from orderApp
 
-        User user1 = userService.getUserById(orderApp.getId()).get();
+        AuthUser authUser1 = userService.getUserById(orderApp.getId()).get();
 
         List<OrderItemRequest> orderItemRequestList1 = new ArrayList<>();
         for (OrderItemApp orderItemApp : orderApp.getOrderItemAppList()) {
@@ -53,7 +53,7 @@ public class OrderService {
             orderItemRequestList1.add(new OrderItemRequest(productDb.get().getId(), orderItemApp.getAmount()));
         }
 
-        OrderRequest orderRequest = new OrderRequest(user1.getId(), orderItemRequestList1);
+        OrderRequest orderRequest = new OrderRequest(authUser1.getId(), orderItemRequestList1);
 
         System.err.println(" order ");
 
@@ -71,7 +71,7 @@ public class OrderService {
                 }
             }
             // get User from Database
-            Optional<User> userFromDatabase = userService.getUserById(orderRequest.getUserId());
+            Optional<AuthUser> userFromDatabase = userService.getUserById(orderRequest.getUserId());
             if (userFromDatabase.isEmpty()) {
                 return false;
             }
@@ -128,7 +128,7 @@ public class OrderService {
     }
 
     public List<Order> getOrderByUserId(Long userId) {
-        return orderRepository.findOrdersByUser_Id(userId);
+        return orderRepository.findOrdersByAuthUser_Id(userId);
 
     }
 

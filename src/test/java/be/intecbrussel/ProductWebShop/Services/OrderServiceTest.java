@@ -1,11 +1,10 @@
 package be.intecbrussel.ProductWebShop.Services;
 
-import be.intecbrussel.ProductWebShop.exception.OrderItemNotFoundExp;
 import be.intecbrussel.ProductWebShop.exception.OrderNotFoundExp;
 import be.intecbrussel.ProductWebShop.model.Order;
 import be.intecbrussel.ProductWebShop.model.OrderItem;
 import be.intecbrussel.ProductWebShop.model.Product;
-import be.intecbrussel.ProductWebShop.model.User;
+import be.intecbrussel.ProductWebShop.model.AuthUser;
 import be.intecbrussel.ProductWebShop.repository.OrderRepository;
 import be.intecbrussel.ProductWebShop.service.OrderItemService;
 import be.intecbrussel.ProductWebShop.service.OrderService;
@@ -15,7 +14,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
@@ -23,9 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.client.ExpectedCount.times;
 
 public class OrderServiceTest {
 
@@ -95,7 +91,7 @@ public class OrderServiceTest {
         // Arrange
         long userId = 1;
         List<Order> orderList = createSampleOrderList();
-        when(orderRepository.findOrdersByUser_Id(userId)).thenReturn(orderList);
+        when(orderRepository.findOrdersByAuthUser_Id(userId)).thenReturn(orderList);
 
         // Act
         List<Order> result = orderService.getOrderByUserId(userId);
@@ -144,7 +140,7 @@ public class OrderServiceTest {
     // Help method
 
     private Order createSampleOrder() {
-        Order order = new Order(new User("aa", "aa"), createSampleOrderItemList());
+        Order order = new Order(new AuthUser("aa", "aa"), createSampleOrderItemList());
         return order;
     }
 

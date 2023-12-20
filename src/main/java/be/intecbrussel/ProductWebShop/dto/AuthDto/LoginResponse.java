@@ -4,11 +4,21 @@ public class LoginResponse {
 
     private Long id;
     private String email;
-    private String password;
+    private String role;
+    private String token;
 
-    public LoginResponse(Long id, String email, String password) {
+    public LoginResponse(Long id, String email, String role, String token) {
+        this.id = id;
         this.email = email;
-        this.password = password;
+        this.role = role;
+        this.token = token;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -20,20 +30,20 @@ public class LoginResponse {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
+    public String getRole() {
+        return role;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setRole(String role) {
+        this.role = role;
     }
 
-    public Long getId() {
-        return id;
+    public String getToken() {
+        return token;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setToken(String token) {
+        this.token = token;
     }
 
     @Override
@@ -41,7 +51,8 @@ public class LoginResponse {
         return "LoginResponse{" +
                 "id=" + id +
                 ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
+                ", role='" + role + '\'' +
+                ", token='" + token + '\'' +
                 '}';
     }
 }

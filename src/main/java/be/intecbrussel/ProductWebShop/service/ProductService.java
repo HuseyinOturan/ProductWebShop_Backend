@@ -25,7 +25,7 @@ public class ProductService {
         if (product.getName().isEmpty() || product.getImg().isEmpty() || product.getDescriptions().isEmpty()) {
             return false;
         }
-        if (product.getStock() < 0 || product.getPrice() < 0) {
+        if (product.getStock() <= 0 || product.getPrice() <= 0) {
             return false;
         }
 

@@ -1,14 +1,10 @@
 package be.intecbrussel.ProductWebShop.service;
 
 import be.intecbrussel.ProductWebShop.exception.OrderItemNotFoundExp;
-import be.intecbrussel.ProductWebShop.exception.ProductNotFoundExp;
+import be.intecbrussel.ProductWebShop.model.AuthUser;
 import be.intecbrussel.ProductWebShop.model.Order;
 import be.intecbrussel.ProductWebShop.model.OrderItem;
-import be.intecbrussel.ProductWebShop.model.Product;
-import be.intecbrussel.ProductWebShop.model.User;
 import be.intecbrussel.ProductWebShop.repository.OrderItemRepository;
-import jakarta.jws.soap.SOAPBinding;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -28,7 +24,7 @@ public class OrderItemService {
     public OrderItemService(OrderItemRepository orderItemRepository, UserService userService) {
         this.orderItemRepository = orderItemRepository;
         this.userService = userService;
-        // this.orderService = orderService;
+        //  this.orderService = orderService;
     }
 
     // custom method
@@ -53,15 +49,18 @@ public class OrderItemService {
     // getOrderItemByUserId
     public List<OrderItem> getOrderItemByUserId(long userId) {
 
+
+        AuthUser authUserDb = userService.getUserById(userId).get();
+
         List<OrderItem> orderItemList = new ArrayList<>();
 
-        User userDb = userService.getUserById(userId).get();
-
-        for (Order order : userDb.getOrderList()) {
-            for (OrderItem orderItem : order.getOrderItemList()) {
-                orderItemList.add(orderItem);
-            }
-        }
+        // List<Order> orderList = orderService.getOrderByUserId(authUserDb.getId());
+        //  for (Order order : orderList) {
+        //      List<OrderItem> orderItems = orderItemRepository.findOrderItemsByOrder_Id(order.getId());
+        //      for (OrderItem orderItem : orderItems) {
+        //          orderItemList.add(orderItem);
+        //      }
+        //  }
         return orderItemList;
     }
 

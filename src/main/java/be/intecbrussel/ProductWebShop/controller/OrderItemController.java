@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("/orderItem")
 public class OrderItemController {
 
@@ -53,16 +53,20 @@ public class OrderItemController {
     @GetMapping("/getOrderItemUserId")
     public ResponseEntity<List<OrderItemRes>> getOrderItemByUserId(@RequestParam long userId) {
 
-        List<OrderItemRes> orderItemResList = new ArrayList<>();
+
         try {
             List<OrderItem> orderItems = orderItemService.getOrderItemByUserId(userId);
+            System.err.println(orderItems);
+            List<OrderItemRes> orderItemResList = new ArrayList<>();
             for (OrderItem orderItem : orderItems) {
                 orderItemResList.add(new OrderItemRes(orderItem.getProduct().getName(), orderItem.getProduct().getPrice(),
                         orderItem.getQuantity()));
             }
             return ResponseEntity.ok(orderItemResList);
+
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
+
     }
 }

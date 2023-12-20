@@ -1,5 +1,6 @@
 package be.intecbrussel.ProductWebShop.Controller;
 
+import be.intecbrussel.ProductWebShop.controller.AuthController;
 import be.intecbrussel.ProductWebShop.controller.ProductController;
 import be.intecbrussel.ProductWebShop.model.Product;
 import be.intecbrussel.ProductWebShop.service.ProductService;
@@ -23,6 +24,9 @@ public class ProductControllerTest {
 
     @Mock
     private ProductService productService;
+
+    @Mock
+    private AuthController authController;
 
     @InjectMocks
     private ProductController productController;
@@ -58,32 +62,6 @@ public class ProductControllerTest {
         assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
     }
 
-    @Test
-    void testGetAllProduct_Success() {
-        // Arrange
-        List<Product> productList = createSampleProductList();
-        when(productService.getAllProduct()).thenReturn(productList);
-
-        // Act
-        ResponseEntity result = productController.getAllProduct();
-
-        // Assert
-        assertEquals(HttpStatus.OK, result.getStatusCode());
-        assertEquals(productList, result.getBody());
-    }
-
-    @Test
-    void testGetAllProduct_Exception() {
-        // Arrange
-        when(productService.getAllProduct()).thenThrow(new RuntimeException("Test Exception"));
-
-        // Act
-        ResponseEntity result = productController.getAllProduct();
-
-        // Assert
-        assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
-        assertNull(result.getBody());
-    }
 
     @Test
     void testGetProductById_Success() {

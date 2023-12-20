@@ -3,12 +3,11 @@ package be.intecbrussel.ProductWebShop.Controller;
 import be.intecbrussel.ProductWebShop.controller.OrderController;
 import be.intecbrussel.ProductWebShop.dto.OrderDto.OrderApp;
 import be.intecbrussel.ProductWebShop.dto.OrderDto.OrderItemApp;
-import be.intecbrussel.ProductWebShop.exception.OrderItemNotFoundExp;
 import be.intecbrussel.ProductWebShop.exception.OrderNotFoundExp;
+import be.intecbrussel.ProductWebShop.model.AuthUser;
 import be.intecbrussel.ProductWebShop.model.Order;
 import be.intecbrussel.ProductWebShop.model.OrderItem;
 import be.intecbrussel.ProductWebShop.model.Product;
-import be.intecbrussel.ProductWebShop.model.User;
 import be.intecbrussel.ProductWebShop.service.OrderService;
 import be.intecbrussel.ProductWebShop.service.ProductService;
 import be.intecbrussel.ProductWebShop.service.UserService;
@@ -223,7 +222,7 @@ public class OrderControllerTest {
     }
 
     private Order createSampleOrder() {
-        Order order = new Order(new User("aa", "aa"), createSampleOrderItemList());
+        Order order = new Order(new AuthUser("aa", "aa"), createSampleOrderItemList());
         return order;
     }
 

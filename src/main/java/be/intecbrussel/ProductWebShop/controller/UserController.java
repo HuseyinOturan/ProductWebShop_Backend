@@ -1,15 +1,16 @@
 package be.intecbrussel.ProductWebShop.controller;
 
 import be.intecbrussel.ProductWebShop.exception.UserNotFoundExp;
-import be.intecbrussel.ProductWebShop.model.User;
+import be.intecbrussel.ProductWebShop.model.AuthUser;
 import be.intecbrussel.ProductWebShop.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@RestController
+@Controller
 @RequestMapping("/user")
 public class UserController {
 
@@ -27,9 +28,9 @@ public class UserController {
 
     // read
     @GetMapping("/getUserByEmail")
-    public ResponseEntity<User> getUserByEmail(@RequestParam String email) {
+    public ResponseEntity<AuthUser> getUserByEmail(@RequestParam String email) {
 
-        Optional<User> userFromDb = userService.getUser(email);
+        Optional<AuthUser> userFromDb = userService.getUser(email);
         if (userFromDb.isEmpty()) {
             return ResponseEntity.status((HttpStatus.NOT_FOUND)).build();
         }
@@ -46,9 +47,9 @@ public class UserController {
     }
 
     @GetMapping("/getUserById")
-    public ResponseEntity<Optional<User>> getUserById(@RequestParam long id) {
+    public ResponseEntity<Optional<AuthUser>> getUserById(@RequestParam long id) {
 
-        Optional<User> dbUser = userService.getUserById(id);
+        Optional<AuthUser> dbUser = userService.getUserById(id);
         if (dbUser.isPresent()) {
             return ResponseEntity.ok(dbUser);
         } else {
@@ -58,9 +59,9 @@ public class UserController {
 
     // update
     @PatchMapping("/updateUser")
-    public ResponseEntity updateUser(@RequestBody User user) {
+    public ResponseEntity updateUser(@RequestBody AuthUser authUser) {
         try {
-            return ResponseEntity.ok(userService.patchUser(user));
+            return ResponseEntity.ok(userService.patchUser(authUser));
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

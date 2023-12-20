@@ -11,7 +11,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     // @Query("SELECT u FROM User u WHERE u.email = :email")
     // Optional<User> findByEmail(String email);
 
-    @Query("SELECT p FROM  Product p WHERE p.name = :name")
+    //    @Query("SELECT p FROM  Product p WHERE p.name = :name")
     Optional<Product> findByName(String name);
 
 }

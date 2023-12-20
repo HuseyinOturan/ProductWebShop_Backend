@@ -1,7 +1,7 @@
 package be.intecbrussel.ProductWebShop.Services;
 
 import be.intecbrussel.ProductWebShop.exception.UserNotFoundExp;
-import be.intecbrussel.ProductWebShop.model.User;
+import be.intecbrussel.ProductWebShop.model.AuthUser;
 import be.intecbrussel.ProductWebShop.repository.UserRepository;
 import be.intecbrussel.ProductWebShop.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,11 +17,9 @@ import java.util.Optional;
 
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.validateMockitoUsage;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.client.ExpectedCount.times;
 
-public class UserServiceTest {
+public class AuthUserServiceTest {
     @Mock
     private UserRepository userRepository;
     @InjectMocks
@@ -36,15 +34,15 @@ public class UserServiceTest {
     void testGetUserByEmail() {
         // Arrange
         String userEmail = "userMail";
-        User expectedUser = new User("userMail", "password");
-        when(userRepository.findByEmail(userEmail)).thenReturn(Optional.of(expectedUser));
+        AuthUser expectedAuthUser = new AuthUser("userMail", "password");
+        when(userRepository.findByEmail(userEmail)).thenReturn(Optional.of(expectedAuthUser));
 
         // Act
-        Optional<User> actualUser = userService.getUser(userEmail);
+        Optional<AuthUser> actualUser = userService.getUser(userEmail);
 
         // Assert
         assertTrue(actualUser.isPresent());
-        assertEquals(expectedUser, actualUser.get());
+        assertEquals(expectedAuthUser, actualUser.get());
 
 
         Mockito.verify(userRepository, Mockito.times(1)).findByEmail(userEmail);
@@ -53,14 +51,14 @@ public class UserServiceTest {
     @Test
     void testGetAllUsers() {
         // Arrange
-        List<User> expectedUsers = Arrays.asList(new User("ss", "ll"), new User("pp", "kk"), new User("mm", "oo"));
-        when(userRepository.findAll()).thenReturn(expectedUsers);
+        List<AuthUser> expectedAuthUsers = Arrays.asList(new AuthUser("ss", "ll"), new AuthUser("pp", "kk"), new AuthUser("mm", "oo"));
+        when(userRepository.findAll()).thenReturn(expectedAuthUsers);
 
         // Act
-        List<User> actualUsers = userService.getAllUser();
+        List<AuthUser> actualAuthUsers = userService.getAllUser();
 
         // Assert
-        assertEquals(expectedUsers.size(), actualUsers.size());
+        assertEquals(expectedAuthUsers.size(), actualAuthUsers.size());
 
         // control call userRepository
         Mockito.verify(userRepository, Mockito.times(1)).findAll();
@@ -70,15 +68,15 @@ public class UserServiceTest {
     void testGetUserById() {
         // Arrange
         Long userId = 1L;
-        User expectedUser = new User("g", "o");
-        when(userRepository.findById(userId)).thenReturn(Optional.of(expectedUser));
+        AuthUser expectedAuthUser = new AuthUser("g", "o");
+        when(userRepository.findById(userId)).thenReturn(Optional.of(expectedAuthUser));
 
         // Act
-        Optional<User> actualUser = userService.getUserById(userId);
+        Optional<AuthUser> actualUser = userService.getUserById(userId);
 
         // Assert
         assertTrue(actualUser.isPresent());
-        assertEquals(expectedUser, actualUser.get());
+        assertEquals(expectedAuthUser, actualUser.get());
 
 
         Mockito.verify(userRepository, Mockito.times(1)).findById(userId);
@@ -87,18 +85,18 @@ public class UserServiceTest {
     @Test
     void testPatchUser() {
         // Arrange
-        User userToUpdate = new User("l", "l");
-        when(userRepository.save(userToUpdate)).thenReturn(userToUpdate);
+        AuthUser authUserToUpdate = new AuthUser("l", "l");
+        when(userRepository.save(authUserToUpdate)).thenReturn(authUserToUpdate);
 
         // Act
-        Optional<User> updatedUser = userService.patchUser(userToUpdate);
+        Optional<AuthUser> updatedUser = userService.patchUser(authUserToUpdate);
 
         // Assert
         assertTrue(updatedUser.isPresent());
-        assertEquals(userToUpdate, updatedUser.get());
+        assertEquals(authUserToUpdate, updatedUser.get());
 
 
-        Mockito.verify(userRepository, Mockito.times(1)).save(userToUpdate);
+        Mockito.verify(userRepository, Mockito.times(1)).save(authUserToUpdate);
     }
 
     @Test
